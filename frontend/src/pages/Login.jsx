@@ -1,12 +1,14 @@
 import { Link, useNavigate } from "react-router-dom";
 import ai from "/ai.svg";
 import AnimatedBtn from "../components/AnimatedBtn/AnimatedBtn";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { apiClient } from "../config/api";
+import Toast from "../components/Toast/Toast";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
   const [submitting, setSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -17,7 +19,15 @@ const Login = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
+    setShowToast(false);
     console.log(form);
+
+    // Show toast after 2 seconds if still submitting
+    const toastTimer = setTimeout(() => {
+      if (submitting) {
+        setShowToast(true);
+      }
+    }, 2000);
 
     apiClient
       .post('/api/auth/login', {
@@ -29,12 +39,12 @@ const Login = () => {
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
         }
-        
+
         // Store user data
         if (res.data.user) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
         }
-        
+
         navigate("/chat");
         console.log(res);
       })
@@ -45,6 +55,8 @@ const Login = () => {
       })
       .finally(() => {
         setSubmitting(false);
+        setShowToast(false);
+        clearTimeout(toastTimer);
       });
   }
 
@@ -149,6 +161,14 @@ const Login = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Message */}
+      <Toast
+        message="Please wait for a while..."
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        duration={5000}
+      />
     </div>
   );
 };

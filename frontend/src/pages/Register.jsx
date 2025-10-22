@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import ai from "/ai.svg";
 import AnimatedBtn from "../components/AnimatedBtn/AnimatedBtn";
 import { apiClient } from "../config/api";
+import Toast from "../components/Toast/Toast";
 
 const Register = () => {
   const [form, setForm] = useState({
@@ -12,6 +13,7 @@ const Register = () => {
     password: "",
   });
   const [submitting, setSubmitting] = useState(false);
+  const [showToast, setShowToast] = useState(false);
   const navigate = useNavigate();
 
   function handleChange(e) {
@@ -22,7 +24,15 @@ const Register = () => {
   async function handleSubmit(e) {
     e.preventDefault();
     setSubmitting(true);
+    setShowToast(false);
     console.log("Form data:", form);
+
+    // Show toast after 2 seconds if still submitting
+    const toastTimer = setTimeout(() => {
+      if (submitting) {
+        setShowToast(true);
+      }
+    }, 2000);
 
     apiClient
       .post('/api/auth/register', {
@@ -38,7 +48,7 @@ const Register = () => {
         if (res.data.token) {
           localStorage.setItem("token", res.data.token);
         }
-        
+
         // Store user data
         if (res.data.user) {
           localStorage.setItem("user", JSON.stringify(res.data.user));
@@ -56,6 +66,8 @@ const Register = () => {
       })
       .finally(() => {
         setSubmitting(false);
+        setShowToast(false);
+        clearTimeout(toastTimer);
       });
   }
 
@@ -154,10 +166,10 @@ const Register = () => {
                 required
                 value={form.password}
                 onChange={handleChange}
-                minLength={8}
+                minLength={6}
               />
               <p className="text-xs text-gray-500 !mt-1">
-                Must be at least 8 characters long
+                Must be at least 6 characters long
               </p>
             </div>
 
@@ -190,6 +202,14 @@ const Register = () => {
           </div>
         </div>
       </div>
+
+      {/* Toast Message */}
+      <Toast
+        message="Please wait for a while..."
+        show={showToast}
+        onClose={() => setShowToast(false)}
+        duration={5000}
+      />
     </div>
   );
 };
