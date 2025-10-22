@@ -104,7 +104,7 @@ const Chat = () => {
 
       <div
         className="flex-1 flex flex-col"
-        onClick={() => sidebarOpen && setSidebarOpen(false)}
+        onClick={() => sidebarOpen && window.innerWidth < 1024 && setSidebarOpen(false)}
       >
         <ChatHeader
           sidebarOpen={sidebarOpen}

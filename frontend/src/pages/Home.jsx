@@ -30,7 +30,7 @@ const Home = () => {
         <div>
           <Link to='/register'><AnimatedBtn>Get Started</AnimatedBtn></Link>
         </div>
-        <div className='w-full !mt-10 features flex flex-col lg:flex-row items-center justify-center gap-8 lg:gap-20 !mb-10'>
+        <div className='w-full !mt-10 features flex flex-col sm:flex-row items-center justify-center gap-8 lg:gap-20 !mb-10'>
           <div className='w-[90%] sm:w-80 !p-5 border border-[#b5ff6d] rounded-xl flex flex-col gap-3'>
             <h2 className='text-2xl text-center font-bold text-white'>💬 Natural Chat</h2>
             <p className='text-gray-300 text-center'>AI that understands context and responds naturally</p>
