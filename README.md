@@ -1,5 +1,5 @@
-# Loura-AI 💬  
-**A Full Stack ChatGPT-style AI Chat Application**  
+# Loura-AI - (A Full Stack ChatGPT-style AI Chat Application)
+ 
 
 ## 🚀 What is Loura-AI  
 Loura-AI is a full-stack web application enabling real-time chat powered by AI, with support for RAG (Retrieval-Augmented Generation), embeddings + vector search, and persistent chat history. Built with a modern MERN + AI stack, it’s designed to provide a smooth, scalable, and intelligent conversational experience.
