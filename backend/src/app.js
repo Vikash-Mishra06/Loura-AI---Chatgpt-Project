@@ -29,6 +29,11 @@ app.get('/', (req, res) => {
     });
 });
 
+// Health check endpoint
+app.get("/health", (req, res) => {
+    res.json({ status: "ok" });
+});
+
 //using routes
 app.use('/api/auth', authRoutes);
 app.use('/api/chat', chatRoutes);
