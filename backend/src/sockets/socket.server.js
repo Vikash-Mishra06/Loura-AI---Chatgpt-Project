@@ -112,34 +112,45 @@ function initSocketServer(httpServer) {
             console.log(ltm[0])
             console.log(stm)
 
-            const response = await aiService.generateResponse([...ltm, ...stm]);
+            try {
+                const response = await aiService.generateResponse([...ltm, ...stm]);
 
-            
-            socket.emit("ai-response", {
-                content: response,
-                chat: messagePayload.chat
-            })
+                
+                socket.emit("ai-response", {
+                    content: response,
+                    chat: messagePayload.chat
+                })
 
 
-            const [responseMessage, responseVectors] = await Promise.all([
-                messageModel.create({
-                chat: messagePayload.chat,
-                user: socket.user._id,
-                content: response,
-                role: "model"
-            }),
-            aiService.generateVector(response)
-            ])
-
-            await createMemory({
-                vectors: responseVectors,
-                memoryId: responseMessage._id,
-                metadata: {
+                const [responseMessage, responseVectors] = await Promise.all([
+                    messageModel.create({
                     chat: messagePayload.chat,
                     user: socket.user._id,
-                    text: response
-                }
-            })
+                    content: response,
+                    role: "model"
+                }),
+                aiService.generateVector(response)
+                ])
+
+                await createMemory({
+                    vectors: responseVectors,
+                    memoryId: responseMessage._id,
+                    metadata: {
+                        chat: messagePayload.chat,
+                        user: socket.user._id,
+                        text: response
+                    }
+                })
+            } catch (error) {
+                console.error("AI Service Error:", error.message);
+                
+                // Emit fallback message when API key is expired or billing issue
+                socket.emit("ai-response", {
+                    content: "Sorry, I couldn't generate a response since API key is expired.",
+                    chat: messagePayload.chat,
+                    error: true
+                })
+            }
 
         })
 
