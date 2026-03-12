@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // API Configuration
 const API_BASE_URL = import.meta.env.PROD 
-  ? "https://chatgpt-project-o7me.onrender.com" 
+  ? "https://loura-ai-chatgpt-project.onrender.com" 
   : "http://localhost:3000";
 
 // Create axios instance with default config
